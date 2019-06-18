@@ -12,22 +12,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-        semver: {
-            options: {
-              // Task-specific options go here.
-              space: "\t"
-            },
-            your_target: {
-              // Target-specific file lists and/or options go here.
-              files: [{
-                  src: "package.json",
-                  dest: "package.json.out"
-              }, { 
-                  src: "bower.json",
-                  dest: "bower.json.out"
-              }]
-            },
-        },
         prompt: {
             bump: {
               options: {
@@ -58,29 +42,59 @@ module.exports = function(grunt) {
               }
             }
         },
-        bump: {
-            options: {
-                files: ['package.json'],
-                updateConfigs: [],
-                commit: true,
-                commitMessage: 'Release v%VERSION%',
-                commitFiles: ['package.json'],
-                createTag: true,
-                tagName: 'v%VERSION%',
-                tagMessage: 'Version %VERSION%',
-                push: true,
-                pushTo: 'upstream',
-                gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
-                globalReplace: false,
-                prereleaseName: false,
-                metadata: '',
-                regExp: false
+        gitadd: {
+            task: {
+              options: {
+                force: true
+              },
+              files: {
+                src: ['package.json']
+              }
             }
         },
+        gitcommit: {
+            task: {
+                options: {
+                    message: 'Testing from grunt',
+                    noVerify: true,
+                    noStatus: false
+                },
+                files: {
+                    src: ['test.txt']
+                }
+            }
+        },
+        gittag: {
+            addtag: {
+                options: {
+                    tag: '0.0.1',
+                    message: 'Testing'
+                }
+            },
+            deletetag: {
+                options: {
+                    tag: '0.0.1',
+                    remove: true
+                }
+            }
+        },
+        gitcheckout: {
+            task: {
+                options: {
+                    branch: 'master',
+                    create: true
+                }
+            }
+        },
+        gitpush: {
+            task: {
+              options: {
+                remote: 'origin',
+                branch: 'master',
+              }
+            }
+        }
     });
-
-    grunt.loadNpmTasks('grunt-semver');
-    grunt.loadNpmTasks('grunt-prompt');
 
     grunt.registerTask('new-release', [ 'prompt:bump', 'release' ]);
 
