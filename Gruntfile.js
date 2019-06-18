@@ -107,6 +107,7 @@ module.exports = (grunt) => {
         cnf: {}
     });
 
+    //TODO: read XML
     grunt.registerTask('new-release', [ 
         'prompt:bump',
         'incress-version-number',
