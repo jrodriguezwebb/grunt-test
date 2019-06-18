@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         jsonlint: {
             all: {
                 src: [ 'package.json' ],
@@ -19,7 +20,7 @@ module.exports = function(grunt) {
                   {
                     config:  'increment',
                     type:    'list',
-                    message: 'Bump version from ', //+ '<%= pkg.version %>' + ' to:',
+                    message: 'Bump version from ' + '<%= pkg.version %>' + ' to:',
                     choices: [
                       {
                         value: 'patch',
@@ -31,7 +32,7 @@ module.exports = function(grunt) {
                       },
                       {
                         value: 'major',
-                        name:  'Major:  ' // + semver.inc(currentVersion, 'major') + ' Incompatible API changes.'
+                        name:  'Major:  ' // + '<%= pkg.version %>' // + incressMajor(this.pkg.version) + ' Incompatible API changes.'
                       }
                     ]
                   }
@@ -88,10 +89,10 @@ module.exports = function(grunt) {
         },
         gitpush: {
             task: {
-              options: {
-                remote: 'origin',
-                branch: 'master',
-              }
+                options: {
+                    remote: 'origin',
+                    branch: 'master',
+                }
             }
         }
     });
