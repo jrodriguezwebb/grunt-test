@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = (grunt) => {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
@@ -24,20 +24,20 @@ module.exports = function(grunt) {
                     choices: [
                       {
                         value: 'patch',
-                        name:  'Patch:  '  // + semver.inc(currentVersion, 'patch') + ' Backwards-compatible bug fixes.'
+                        name:  'Patch:  (Backwards-compatible bug fixes.)'
                       },
                       {
                         value: 'minor',
-                        name:  'Minor:  ' // + semver.inc(currentVersion, 'minor') + ' Add functionality in a backwards-compatible manner.'
+                        name:  'Minor:  (Add functionality in a backwards-compatible manner.)'
                       },
                       {
                         value: 'major',
-                        name:  'Major:  ' // + '<%= pkg.version %>' // + incressMajor(this.pkg.version) + ' Incompatible API changes.'
+                        name:  'Major: '  + ' (Incompatible API changes.)' // + '<%= pkg.version %>' 
                       }
                     ]
                   }
                 ],
-                then: function(results){                
+                then: (results) => {                
                     grunt.config.set('bump.increment', [results.increment]);                      
                 }
               }
@@ -56,12 +56,12 @@ module.exports = function(grunt) {
         gitcommit: {
             task: {
                 options: {
-                    message: 'Testing from grunt',
+                    message: '<%= cnf.commitMessage %>',
                     noVerify: true,
                     noStatus: false
                 },
                 files: {
-                    src: ['test.txt']
+                    src: ['package.json']
                 }
             }
         },
@@ -90,32 +90,57 @@ module.exports = function(grunt) {
         gitpush: {
             task: {
                 options: {
-                    remote: 'origin',
-                    branch: 'master',
+                    remote: '<%= cnf.remote %>',
+                    branch: '<%= cnf.branchName %>',
+                    upstream: '<%= cnf.upstream %>'
                 }
             }
-        }
+        },
+        gitcheckout: {
+            task: {
+                options: {
+                    branch: '<%= cnf.branchName %>',
+                    create: '<%= cnf.createBranch %>'
+                }
+            }
+        },
+        cnf: {}
     });
 
-    grunt.registerTask('new-release', [ 'prompt:bump', 'release' ]);
+    grunt.registerTask('new-release', [ 
+        'prompt:bump',
+        'incress-version-number',
+        'new-release-branch', 
+        'write-package',
+        'jsonlint',
+        'push-bumped-version'
+    ]);
 
-    grunt.registerTask('release', function() {
+    grunt.registerTask('new-release-branch', () => {
+        grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
+        grunt.config.set('cnf.createBranch', true);
+        grunt.task.run('gitcheckout');  
+    });
+
+    grunt.registerTask('push-bumped-version', () => {
+        grunt.config.set('cnf.commitMessage', `Bumped version to: release/${grunt.config('pkg.version')}`);
+        grunt.config.set('cnf.upstream', true);
+        grunt.config.set('cnf.remote', 'origin');
+        grunt.task.run('gitadd');
+        grunt.task.run('gitcommit');        
+        grunt.task.run('gitpush');
+    });
+
+    grunt.registerTask('write-package', () => {
+        let packageJSON = grunt.config('pkg');
+        grunt.file.write('package.json', JSON.stringify(packageJSON));
+    });
+
+    grunt.registerTask('incress-version-number', () => {
         if(grunt.file.isFile('package.json')){
-            let packageJSON = grunt.file.readJSON('package.json');
-            switch(grunt.config('increment')){
-                case 'major':
-                    packageJSON.version = incressMajor(packageJSON.version);
-                break;
-                case 'minor':
-                    packageJSON.version = incressMinor(packageJSON.version);
-                break;
-                case 'patch':
-                    packageJSON.version = incressPatch(packageJSON.version);
-                break;
-            }            
-            grunt.log.writeln(packageJSON.version);
-            grunt.file.write('package.json', JSON.stringify(packageJSON));
-            grunt.task.run('jsonlint');
+            let packageJSON = grunt.config('pkg');
+            handleVersionBump(grunt, packageJSON);
+            grunt.config.set('pkg.version', packageJSON.version);
         }
     });
 }
@@ -145,4 +170,19 @@ function setVersionValue(semanticVersion, level, value) {
     let arrVersion = semanticVersion.split('.');
     arrVersion[level] = value;
     return arrVersion.join('.');
+}
+
+function handleVersionBump(grunt, packageJSON){
+    switch(grunt.config('increment')){
+        case 'major':
+            packageJSON.version = incressMajor(packageJSON.version);
+        break;
+        case 'minor':
+            packageJSON.version = incressMinor(packageJSON.version);
+        break;
+        case 'patch':
+            packageJSON.version = incressPatch(packageJSON.version);
+        break;
+    }            
+    grunt.log.writeln(packageJSON.version);
 }
