@@ -118,6 +118,8 @@ module.exports = (grunt) => {
         'push-bumped-version'
     ]);
 
+    // TODO: Close release
+
     grunt.registerTask('new-release-branch', () => {
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.createBranch', true);
