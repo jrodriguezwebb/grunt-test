@@ -1,5 +1,6 @@
 module.exports = (grunt) => {
     require('load-grunt-tasks')(grunt);
+    var convert = require('xml-js');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -61,7 +62,7 @@ module.exports = (grunt) => {
                     noStatus: false
                 },
                 files: {
-                    src: ['package.json']
+                    src: ['package.json', 'config.xml']
                 }
             }
         },
@@ -107,13 +108,13 @@ module.exports = (grunt) => {
         cnf: {}
     });
 
-    //TODO: read XML
     grunt.registerTask('new-release', [ 
         'prompt:bump',
         'incress-version-number',
         'new-release-branch', 
         'write-package',
         'jsonlint',
+        'update-config-xml',
         'push-bumped-version'
     ]);
 
@@ -142,6 +143,16 @@ module.exports = (grunt) => {
             let packageJSON = grunt.config('pkg');
             handleVersionBump(grunt, packageJSON);
             grunt.config.set('pkg.version', packageJSON.version);
+        }
+    });
+
+    grunt.registerTask('update-config-xml', () => {
+        if(grunt.file.isFile('config.xml')){
+            const configXML = grunt.file.read('config.xml');
+            let configJSON = JSON.parse(convert.xml2json(configXML, {compact: true, spaces: 4}));
+            configJSON.widget._attributes.version = grunt.config('pkg.version');
+            const result = convert.json2xml(configJSON, {compact: true, ignoreComment: true, spaces: 4});
+            grunt.file.write('config.xml', result);            
         }
     });
 }
