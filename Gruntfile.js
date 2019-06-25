@@ -1,12 +1,14 @@
 module.exports = (grunt) => {
     require('load-grunt-tasks')(grunt);
     var convert = require('xml-js');
+    const pathPackageJSON = 'package.json';
+    const pathConfigXML = 'config.xml';
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: grunt.file.readJSON(pathPackageJSON),
         jsonlint: {
             all: {
-                src: [ 'package.json' ],
+                src: [ pathPackageJSON ],
                 options: {
                     format: true,
                     indent: 2,
@@ -50,7 +52,7 @@ module.exports = (grunt) => {
                 force: true
               },
               files: {
-                src: ['package.json']
+                src: [pathPackageJSON]
               }
             }
         },
@@ -62,7 +64,7 @@ module.exports = (grunt) => {
                     noStatus: false
                 },
                 files: {
-                    src: ['package.json', 'config.xml']
+                    src: [pathPackageJSON, pathConfigXML]
                 }
             }
         },
@@ -137,11 +139,11 @@ module.exports = (grunt) => {
 
     grunt.registerTask('write-package', () => {
         let packageJSON = grunt.config('pkg');
-        grunt.file.write('package.json', JSON.stringify(packageJSON));
+        grunt.file.write(pathPackageJSON, JSON.stringify(packageJSON));
     });
 
     grunt.registerTask('incress-version-number', () => {
-        if(grunt.file.isFile('package.json')){
+        if(grunt.file.isFile(pathPackageJSON)){
             let packageJSON = grunt.config('pkg');
             handleVersionBump(grunt, packageJSON);
             grunt.config.set('pkg.version', packageJSON.version);
@@ -149,12 +151,12 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('update-config-xml', () => {
-        if(grunt.file.isFile('config.xml')){
-            const configXML = grunt.file.read('config.xml');
+        if(grunt.file.isFile(pathConfigXML)){
+            const configXML = grunt.file.read(pathConfigXML);
             let configJSON = JSON.parse(convert.xml2json(configXML, {compact: true, spaces: 4}));
             configJSON.widget._attributes.version = grunt.config('pkg.version');
             const result = convert.json2xml(configJSON, {compact: true, ignoreComment: true, spaces: 4});
-            grunt.file.write('config.xml', result);            
+            grunt.file.write(pathConfigXML, result);            
         }
     });
 }
