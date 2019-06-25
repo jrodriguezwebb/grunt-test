@@ -118,9 +118,18 @@ module.exports = (grunt) => {
         'jsonlint',
         'update-config-xml',
         'push-bumped-version'
+        //TODO: Build and deploy 
     ]);
 
-    // TODO: Close release
+    // TODO: Close release task
+
+    // TODO: Build and deploy task (all platforms)
+
+    // TODO: Build for android --prod --dev 
+
+    // TODO: Build for iOS 
+
+    // TODO: Build for web
 
     grunt.registerTask('new-release-branch', () => {
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
