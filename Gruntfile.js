@@ -110,7 +110,7 @@ module.exports = (grunt) => {
         }
     });
     
-    grunt.registerTask('new-release', [ 
+    grunt.registerTask('new-release', [
         'prompt:bump',
         'incress-version-number',
         'new-release-branch', 
@@ -132,7 +132,7 @@ module.exports = (grunt) => {
     grunt.registerTask('set-new-version-number', () => {
         const newVersion = grunt.config('pkg.version');
         grunt.config.set('cnf.newVersion', newVersion);
-        grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`); 
+        grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
     });
 
     grunt.registerTask('merge-release-master', () => {
@@ -157,23 +157,23 @@ module.exports = (grunt) => {
 
     // TODO: Build and deploy task (all platforms)
 
-    // TODO: Build for android --prod --dev 
+    // TODO: Build for android --prod --dev
 
-    // TODO: Build for iOS 
+    // TODO: Build for iOS
 
     // TODO: Build for web
 
     grunt.registerTask('new-release-branch', () => {
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.createBranch', true);
-        grunt.task.run('gitcheckout');  
+        grunt.task.run('gitcheckout');
     });
 
     grunt.registerTask('push-bumped-version', () => {
         grunt.config.set('cnf.commitMessage', `Bumped version to: release/${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.upstream', true);
         grunt.task.run('gitadd');
-        grunt.task.run('gitcommit');        
+        grunt.task.run('gitcommit');
         grunt.task.run('gitpush');
     });
 
@@ -196,7 +196,7 @@ module.exports = (grunt) => {
             let configJSON = JSON.parse(convert.xml2json(configXML, {compact: true, spaces: 4}));
             configJSON.widget._attributes.version = grunt.config('pkg.version');
             const result = convert.json2xml(configJSON, {compact: true, ignoreComment: true, spaces: 4});
-            grunt.file.write(pathConfigXML, result);            
+            grunt.file.write(pathConfigXML, result);
         }
     });
 }
