@@ -71,22 +71,14 @@ module.exports = (grunt) => {
         gittag: {
             addtag: {
                 options: {
-                    tag: '0.0.1',
-                    message: 'Testing'
+                    tag: '<%= cnf.tag %>',
+                    message: '<%= cnf.commitMessage %>'
                 }
             },
             deletetag: {
                 options: {
-                    tag: '0.0.1',
+                    tag: '<%= cnf.tag %>',
                     remove: true
-                }
-            }
-        },
-        gitcheckout: {
-            task: {
-                options: {
-                    branch: 'master',
-                    create: true
                 }
             }
         },
@@ -99,6 +91,14 @@ module.exports = (grunt) => {
                 }
             }
         },
+        gitmerge: {
+            task: {
+                options: {
+                    branch: '<%= cnf.branchName %>',
+                    noff: '<%= cnf.noff %>'
+                }
+            }
+        },
         gitcheckout: {
             task: {
                 options: {
@@ -107,7 +107,9 @@ module.exports = (grunt) => {
                 }
             }
         },
-        cnf: {}
+        cnf: {
+            noff: true
+        }
     });
 
     grunt.registerTask('new-release', [ 
@@ -120,8 +122,26 @@ module.exports = (grunt) => {
         'push-bumped-version'
         //TODO: Build and deploy 
     ]);
-
-    // TODO: Close release task
+    
+    grunt.registerTask('finish-release', () => {
+        // git checkout master
+        grunt.config.set('cnf.branchName', `master`);
+        grunt.task.run('gitcheckout');
+        // git merge --no-ff release/1.2.0
+        grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
+        grunt.task.run('gitmerge');
+        // git tag -a 1.2.0
+        grunt.config.set('cnf.tag', `${grunt.config('pkg.version')}`);
+        grunt.config.set('cnf.commitMessage', `Release Tag ${grunt.config('pkg.version')}`);
+        grunt.task.run('gittag.addtag');
+        // git checkout develop
+        grunt.config.set('cnf.branchName', `develop`);
+        grunt.task.run('gitcheckout');
+        // git merge --no-ff release/1.2.0
+        grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
+        grunt.task.run('gitmerge');
+        //TODO: delete release branch 
+    });
 
     // TODO: Build and deploy task (all platforms)
 
