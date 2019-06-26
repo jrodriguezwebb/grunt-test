@@ -106,7 +106,7 @@ module.exports = (grunt) => {
             remote: 'origin'
         }
     });
-    // TODO: this comment should appear 
+    
     grunt.registerTask('new-release', [ 
         'prompt:bump',
         'incress-version-number',
@@ -118,6 +118,7 @@ module.exports = (grunt) => {
         //TODO: Build and deploy 
     ]);
     
+    // TODO: CHANGE 
     // TODO: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', () => {
         // git checkout master
