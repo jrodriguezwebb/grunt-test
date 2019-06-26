@@ -88,7 +88,7 @@ module.exports = (grunt) => {
         gitmerge: {
             task: {
                 options: {
-                    branch: '<%= cnf.branchName %>',
+                    branch: '<%= cnf.branchNameToMerge %>',
                     noff: '<%= cnf.noff %>'
                 }
             }
@@ -96,7 +96,7 @@ module.exports = (grunt) => {
         gitcheckout: {
             task: {
                 options: {
-                    branch: '<%= cnf.branchNameToMerge %>',
+                    branch: '<%= cnf.branchName %>',
                     create: '<%= cnf.createBranch %>'
                 }
             }
