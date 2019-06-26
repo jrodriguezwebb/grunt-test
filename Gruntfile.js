@@ -106,7 +106,7 @@ module.exports = (grunt) => {
             remote: 'origin'
         }
     });
-
+    // TODO: this comment should appear 
     grunt.registerTask('new-release', [ 
         'prompt:bump',
         'incress-version-number',
