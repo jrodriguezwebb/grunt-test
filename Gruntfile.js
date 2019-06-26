@@ -75,12 +75,6 @@ module.exports = (grunt) => {
                     message: '<%= cnf.commitMessage %>'
                 }
             },
-            deletetag: {
-                options: {
-                    tag: '<%= cnf.tag %>',
-                    remove: true
-                }
-            }
         },
         gitpush: {
             task: {
@@ -133,7 +127,7 @@ module.exports = (grunt) => {
         // git tag -a 1.2.0
         grunt.config.set('cnf.tag', `${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.commitMessage', `Release Tag ${grunt.config('pkg.version')}`);
-        grunt.task.run('gittag.addtag');
+        grunt.task.run('gittag');
         // git checkout develop
         grunt.config.set('cnf.branchName', `develop`);
         grunt.task.run('gitcheckout');
