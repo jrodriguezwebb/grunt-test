@@ -124,6 +124,7 @@ module.exports = (grunt) => {
         // git merge --no-ff release/1.2.0
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
         grunt.task.run('gitmerge');
+        grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitpush');
         // git tag -a 1.2.0
         grunt.config.set('cnf.tag', `${grunt.config('pkg.version')}`);
@@ -135,6 +136,7 @@ module.exports = (grunt) => {
         // git merge --no-ff release/1.2.0
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
         grunt.task.run('gitmerge');
+        grunt.config.set('cnf.branchName', `develop`);
         grunt.task.run('gitpush');
         //TODO: delete release branch 
     });
