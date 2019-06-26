@@ -102,7 +102,8 @@ module.exports = (grunt) => {
             }
         },
         cnf: {
-            noff: true
+            noff: true,
+            remote: 'origin'
         }
     });
 
@@ -127,18 +128,19 @@ module.exports = (grunt) => {
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitpush');
         // git tag -a 1.2.0
-        grunt.config.set('cnf.tag', `${grunt.config('pkg.version')}`);
+        /* grunt.config.set('cnf.tag', `${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.commitMessage', `Release Tag ${grunt.config('pkg.version')}`);
         grunt.task.run('gittag');
         // git checkout develop
         grunt.config.set('cnf.branchName', `develop`);
+        grunt.config.set('cnf.createBranch', false);
         grunt.task.run('gitcheckout');
         // git merge --no-ff release/1.2.0
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
         grunt.task.run('gitmerge');
         grunt.config.set('cnf.branchName', `develop`);
         grunt.task.run('gitpush');
-        //TODO: delete release branch 
+        //TODO: delete release branch */
     });
 
     // TODO: Build and deploy task (all platforms)
@@ -158,7 +160,6 @@ module.exports = (grunt) => {
     grunt.registerTask('push-bumped-version', () => {
         grunt.config.set('cnf.commitMessage', `Bumped version to: release/${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.upstream', true);
-        grunt.config.set('cnf.remote', 'origin');
         grunt.task.run('gitadd');
         grunt.task.run('gitcommit');        
         grunt.task.run('gitpush');
