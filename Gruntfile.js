@@ -122,10 +122,12 @@ module.exports = (grunt) => {
     grunt.registerTask('finish-release', () => {
         // git checkout master
         const newVersion = grunt.config('pkg.version');
+        console.log(newVersion);
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitcheckout');
         // git merge --no-ff release/1.2.0
         grunt.config.set('cnf.branchName', `release/${newVersion}`);
+        console.log(`mergin -> release/${newVersion} into master`);
         grunt.task.run('gitmerge');
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitpush');
