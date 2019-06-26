@@ -128,7 +128,6 @@ module.exports = (grunt) => {
         //TODO: Build and deploy 
     ]);
 
-    // DOC: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', [
         'set-new-version-number',
         'merge-release-master',
