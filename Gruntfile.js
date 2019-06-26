@@ -88,7 +88,7 @@ module.exports = (grunt) => {
         gitmerge: {
             task: {
                 options: {
-                    branch: '<%= cnf.branchName %>',
+                    branch: '<%= cnf.branchNameToMerge %>',
                     noff: '<%= cnf.noff %>'
                 }
             }
@@ -102,10 +102,13 @@ module.exports = (grunt) => {
             }
         },
         cnf: {
-            noff: true
+            noff: true,
+            remote: 'origin',
+            branchNameToMerge: null,
+            createBranch: false
         }
     });
-
+    
     grunt.registerTask('new-release', [ 
         'prompt:bump',
         'incress-version-number',
@@ -116,25 +119,34 @@ module.exports = (grunt) => {
         'push-bumped-version'
         //TODO: Build and deploy 
     ]);
-    
+
+    // DOC: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', () => {
         // git checkout master
+        const newVersion = grunt.config('pkg.version');
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitcheckout');
-        // git merge --no-ff release/1.2.0
-        grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
+        // git merge --no-ff release/1.2.0   
+        grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);     
         grunt.task.run('gitmerge');
+        grunt.task.run('gitpush');
         // git tag -a 1.2.0
-        grunt.config.set('cnf.tag', `${grunt.config('pkg.version')}`);
-        grunt.config.set('cnf.commitMessage', `Release Tag ${grunt.config('pkg.version')}`);
+        grunt.config.set('cnf.tag', `${newVersion}`);
+        grunt.config.set('cnf.commitMessage', `Release Tag ${newVersion}`);
         grunt.task.run('gittag');
         // git checkout develop
         grunt.config.set('cnf.branchName', `develop`);
+        grunt.config.set('cnf.createBranch', false);
         grunt.task.run('gitcheckout');
         // git merge --no-ff release/1.2.0
-        grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
         grunt.task.run('gitmerge');
-        //TODO: delete release branch 
+        grunt.task.run('gitpush');
+        //TODO: delete release branch
+    });
+
+    grunt.registerTask('merge-test', () => {
+        grunt.config.set('cnf.branchNameToMerge', `release/1.2.6`);
+        grunt.task.run('gitmerge');
     });
 
     // TODO: Build and deploy task (all platforms)
@@ -154,7 +166,6 @@ module.exports = (grunt) => {
     grunt.registerTask('push-bumped-version', () => {
         grunt.config.set('cnf.commitMessage', `Bumped version to: release/${grunt.config('pkg.version')}`);
         grunt.config.set('cnf.upstream', true);
-        grunt.config.set('cnf.remote', 'origin');
         grunt.task.run('gitadd');
         grunt.task.run('gitcommit');        
         grunt.task.run('gitpush');
