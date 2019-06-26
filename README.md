@@ -1,5 +1,15 @@
 # grunt-test
 
+Requierements:
+Must have installed: 
+
+- Git
+- Node & npm  
+- GruntJS 
+
+To install GruntJS: 
+npm install -g grunt-cli
+
 To start a new release: 
 --------------
 grunt new-release
