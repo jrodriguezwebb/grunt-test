@@ -147,6 +147,11 @@ module.exports = (grunt) => {
         //TODO: delete release branch */
     });
 
+    grunt.registerTask('merge-test', () => {
+        grunt.config.set('cnf.branchName', `release/1.2.6`);
+        grunt.task.run('gitmerge');
+    });
+
     // TODO: Build and deploy task (all platforms)
 
     // TODO: Build for android --prod --dev 
