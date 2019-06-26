@@ -116,6 +116,8 @@ module.exports = (grunt) => {
             newVersion: null
         }
     });
+
+    // testing
     
     grunt.registerTask('new-release', [
         'prompt:bump',
