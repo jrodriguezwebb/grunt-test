@@ -102,9 +102,10 @@ module.exports = (grunt) => {
             }
         },
         cnf: {
-            noff: false,
+            noff: true,
             remote: 'origin',
             branchNameToMerge: null,
+            createBranch: false
         }
     });
     
@@ -119,22 +120,18 @@ module.exports = (grunt) => {
         //TODO: Build and deploy 
     ]);
 
-    //AAAAAAAAAAAAAAA
-    // TODO: must be done from the release branch and without anything to push(all commited)
+    // DOC: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', () => {
         // git checkout master
         const newVersion = grunt.config('pkg.version');
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitcheckout');
-        console.log(newVersion);
-        console.log(`mergin -> release/${newVersion} into master`);
         // git merge --no-ff release/1.2.0   
-        //grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
         grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);     
         grunt.task.run('gitmerge');
-        // grunt.task.run('gitpush');
+        grunt.task.run('gitpush');
         // git tag -a 1.2.0
-        /* grunt.config.set('cnf.tag', `${newVersion}`);
+        grunt.config.set('cnf.tag', `${newVersion}`);
         grunt.config.set('cnf.commitMessage', `Release Tag ${newVersion}`);
         grunt.task.run('gittag');
         // git checkout develop
@@ -142,11 +139,9 @@ module.exports = (grunt) => {
         grunt.config.set('cnf.createBranch', false);
         grunt.task.run('gitcheckout');
         // git merge --no-ff release/1.2.0
-        grunt.config.set('cnf.branchName', `release/${newVersion}`);
         grunt.task.run('gitmerge');
-        grunt.config.set('cnf.branchName', `develop`);
         grunt.task.run('gitpush');
-        //TODO: delete release branch */
+        //TODO: delete release branch
     });
 
     grunt.registerTask('merge-test', () => {
