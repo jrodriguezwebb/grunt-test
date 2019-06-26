@@ -119,19 +119,18 @@ module.exports = (grunt) => {
         //TODO: Build and deploy 
     ]);
 
-    //another change to test
-    // TODO: CHANGE 
+    //1132321323223
     // TODO: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', () => {
         // git checkout master
         const newVersion = grunt.config('pkg.version');
-        //grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
-        grunt.config.set('cnf.branchNameToMerge', `release/1.2.6`);
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitcheckout');
         console.log(newVersion);
         console.log(`mergin -> release/${newVersion} into master`);
-        // git merge --no-ff release/1.2.0        
+        // git merge --no-ff release/1.2.0   
+        //grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
+        grunt.config.set('cnf.branchNameToMerge', `release/1.2.6`);     
         grunt.task.run('gitmerge');
         // grunt.task.run('gitpush');
         // git tag -a 1.2.0
