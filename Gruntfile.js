@@ -102,7 +102,7 @@ module.exports = (grunt) => {
             }
         },
         cnf: {
-            noff: true,
+            noff: false,
             remote: 'origin'
         }
     });
