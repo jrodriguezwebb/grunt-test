@@ -119,7 +119,7 @@ module.exports = (grunt) => {
         //TODO: Build and deploy 
     ]);
 
-    //1132321323223
+    //AAAAAAAAAAAAAAA
     // TODO: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', () => {
         // git checkout master
