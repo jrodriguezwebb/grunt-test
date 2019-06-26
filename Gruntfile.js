@@ -101,6 +101,13 @@ module.exports = (grunt) => {
                 }
             }
         },
+        shell: {  
+            /* command: [
+                'npm install bower', 
+                'bower install angular'
+            ].join('&&'),*/
+            gitgraph: { command: 'git log --all --decorate --oneline --graph' }
+        },
         cnf: {
             noff: true,
             remote: 'origin',
@@ -109,6 +116,8 @@ module.exports = (grunt) => {
             newVersion: null
         }
     });
+
+    // testing
     
     grunt.registerTask('new-release', [
         'prompt:bump',
@@ -128,6 +137,8 @@ module.exports = (grunt) => {
         'gittag',
         'merge-release-develop'
     ]);
+
+    grunt.registerTask('git-graph', ['shell:gitgraph']);
 
     grunt.registerTask('set-new-version-number', () => {
         const newVersion = grunt.config('pkg.version');
