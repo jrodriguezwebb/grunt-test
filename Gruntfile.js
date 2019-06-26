@@ -130,7 +130,7 @@ module.exports = (grunt) => {
         console.log(`mergin -> release/${newVersion} into master`);
         // git merge --no-ff release/1.2.0   
         //grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
-        grunt.config.set('cnf.branchNameToMerge', `release/1.2.6`);     
+        grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);     
         grunt.task.run('gitmerge');
         // grunt.task.run('gitpush');
         // git tag -a 1.2.0
