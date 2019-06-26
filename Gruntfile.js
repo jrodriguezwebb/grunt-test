@@ -118,7 +118,6 @@ module.exports = (grunt) => {
         //TODO: Build and deploy 
     ]);
     
-    // TODO: CHANGE 
     // TODO: must be done from the release branch and without anything to push(all commited)
     grunt.registerTask('finish-release', () => {
         // git checkout master
