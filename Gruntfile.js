@@ -96,7 +96,7 @@ module.exports = (grunt) => {
         gitcheckout: {
             task: {
                 options: {
-                    branch: '<%= cnf.branchName %>',
+                    branch: '<%= cnf.branchNameToMerge %>',
                     create: '<%= cnf.createBranch %>'
                 }
             }
@@ -125,7 +125,8 @@ module.exports = (grunt) => {
     grunt.registerTask('finish-release', () => {
         // git checkout master
         const newVersion = grunt.config('pkg.version');
-        grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
+        //grunt.config.set('cnf.branchNameToMerge', `release/${newVersion}`);
+        grunt.config.set('cnf.branchNameToMerge', `release/1.2.6`);
         grunt.config.set('cnf.branchName', `master`);
         grunt.task.run('gitcheckout');
         console.log(newVersion);
@@ -150,7 +151,7 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('merge-test', () => {
-        grunt.config.set('cnf.branchName', `release/1.2.6`);
+        grunt.config.set('cnf.branchNameToMerge', `release/1.2.6`);
         grunt.task.run('gitmerge');
     });
 
