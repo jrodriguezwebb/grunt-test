@@ -131,6 +131,7 @@ module.exports = (grunt) => {
         // 'build'
     ]);
 
+    // TODO: verify if last version is diferent from the current one
     grunt.registerTask('finish-release', [
         'set-new-version-number',
         'merge-release-master',
