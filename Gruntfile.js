@@ -106,7 +106,10 @@ module.exports = (grunt) => {
                 'npm install bower', 
                 'bower install angular'
             ].join('&&'),*/
-            gitgraph: { command: 'git log --all --decorate --oneline --graph' }
+            gitgraph: { command: 'git log --all --decorate --oneline --graph' },
+            ionicBuildAndroid: { command: 'ionic cordova build android --prod'  },
+            ionicBuildIOS: { command: 'ionic cordova build ios --prod'  },
+            angularBuild: { command: 'ng build --prod'  }
         },
         cnf: {
             noff: true,
@@ -124,8 +127,8 @@ module.exports = (grunt) => {
         'write-package',
         'jsonlint',
         'update-config-xml',
-        'push-bumped-version'
-        //TODO: Build and deploy 
+        'push-bumped-version',
+        // 'build'
     ]);
 
     grunt.registerTask('finish-release', [
@@ -163,13 +166,13 @@ module.exports = (grunt) => {
         grunt.task.run('gitpush');
     });
 
-    // TODO: Build and deploy task (all platforms)
-
-    // TODO: Build for android --prod --dev
-
-    // TODO: Build for iOS
-
-    // TODO: Build for web
+    grunt.registerTask('build', () => {
+        if(grunt.file.isFile('ionic.config.json') || grunt.file.isFile(pathConfigXML)){
+            grunt.task.run(['shell:ionicBuildAndroid', 'shell:ionicBuildIOS']);
+        } else {
+            grunt.task.run('shell:angularBuild');
+        }
+    });   
 
     grunt.registerTask('new-release-branch', () => {
         grunt.config.set('cnf.branchName', `release/${grunt.config('pkg.version')}`);
